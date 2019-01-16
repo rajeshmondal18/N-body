@@ -1,6 +1,10 @@
 # N-body
 _____________________________________
+Read 'nbody_doc.pdf' for detail description.
 A simple set of codes to simulate (semi-numerically) HI maps during reionization.
+
+You need to install FFTW 2.x.x with following flags: '--enable-float' and '--enable-type-prefix' to compile this set of codes.
+
 
 _____________________________________
 Use the makefile for compilation in the following manner:
