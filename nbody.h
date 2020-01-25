@@ -4,6 +4,7 @@ float  ***allocate_fftwf_3d(long N1,long N2,long N3);
 float Hf(float aa),Df(float aa),ff(float aa);
 void Setting_Up_Memory_For_Ro(float av);
 void cic(float** rra);
+void cic_sampled(float **rra, int *ss_indx);
 void Get_Phi(int i);
 void Update_v(float aa,float delta_aa,float **rra,float **vva);
 void Update_x(float aa,float delta_aa,float **rra,float **vva);
@@ -15,6 +16,8 @@ void grad_phi(int ix);
 int write_output(char *fname,long int seed,int output_flag,float **rra,float **vva,float vaa);
 int write_multiout(char *fname,long int seed,int output_flag,float **rra,float **vva,float vaa);
 int read_output(char *fname, int read_flag,long int *seed,int *output_flag,int *in_flag,float **rra,float **vva,float *aa);
+int write_sampled(char *fname,int *ss_indx,long fact,long int seed,int output_flag,float **rra,float **vva,float vaa);
+
 
 //Functions required to generate the power spectrum by Hu and Eisentine
 void TFset_parameters(float omega0hh, float f_baryon, float Tcmb); 

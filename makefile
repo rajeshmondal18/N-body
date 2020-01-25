@@ -17,8 +17,29 @@ nbody_comp: nbody_comp.o nbody_funcs.o allotarrays.o funcs.o powerspec.o tf_fit.
 nbody_comp.o:	nbody_comp.c
 	$(CC) -c $(CFLAGS) $(INCLUDE) nbody_comp.c $(LINKLIB)
 
+
+ionz_main: ionz_main.o nbody_funcs.o allotarrays.o funcs.o powerspec.o tf_fit.o ionz_funcs.o  
+	$(CC) $(CFLAGS) -o ionz_main  ionz_main.o nbody_funcs.o allotarrays.o funcs.o powerspec.o tf_fit.o ionz_funcs.o  $(LINKLIB)
+	rm -rf *.o
+	rm -rf *~
+
+ionz_main.o:	ionz_main.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) ionz_main.c $(LINKLIB)
+
+write_sample: write_sample.o nbody_funcs.o allotarrays.o funcs.o powerspec.o tf_fit.o  
+	$(CC) $(CFLAGS) -o write_sample  write_sample.o nbody_funcs.o allotarrays.o funcs.o powerspec.o tf_fit.o  $(LINKLIB)
+	rm -rf *.o
+	rm -rf *~
+
+write_sample.o:	write_sample.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) write_sample.c $(LINKLIB)
+
+
 nbody_funcs.o:	nbody_funcs.c
 	$(CC) -c  $(CFLAGS)   $(INCLUDE) nbody_funcs.c $(LINKLIB)
+
+ionz_funcs.o:	ionz_funcs.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) ionz_funcs.c $(LINKLIB) 
 
 allotarrays.o:	allotarrays.c
 	$(CC) -c $(CFLAGS) $(INCLUDE) allotarrays.c $(LINKLIB)

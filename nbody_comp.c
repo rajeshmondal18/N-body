@@ -43,7 +43,7 @@ fftwf_plan q_ro; // for FFT
 
 //end of declaration of global variables 
 
-main()
+void main()
 {
   FILE  *inp, *outpp;
   int ii,jj;
@@ -70,11 +70,9 @@ main()
   fscanf(inp,"%ld%d",&seed,&Nbin);
   fscanf(inp,"%f%f%f%f",&vhh,&vomegam,&vomegalam,&vnn);
   fscanf(inp,"%f%f",&vomegab,&sigma_8_present);
-  fscanf(inp,"%ld%ld%ld%ld%f",&N1,&N2,&N3,&MM,&LL);
-  fscanf(inp,"%f",&vaa);
-  fscanf(inp,"%d",&NF);
+  fscanf(inp,"%ld%ld%ld%d%f",&N1,&N2,&N3,&NF,&LL);
   fscanf(inp,"%d%d",&oflag,&pk_flag);
-  fscanf(inp,"%f",&delta_aa);  /* time step, final scale factor*/
+  fscanf(inp,"%f%f",&vaa,&delta_aa);  /* time step, final scale factor*/
   fscanf(inp,"%d",&Noutput);
   
   nz=(float*)calloc(Noutput,sizeof(float)); // array to store Noutput 
@@ -83,7 +81,7 @@ main()
     fscanf(inp,"%f",&nz[ii]);
   
   fclose(inp);
-  
+  MM=(N1*N2*N3)/pow(NF,3);
   DD=Df(vaa); // growing mode 
   
   DM_m=vomegam*rho_c*pow(vhh,3.)*(1.0*N1)*(1.0*N2)*(1.0*N3)*powf(LL,3.)/(MM*1.e10); //mass per particle in 10^10 M_sun h^-1 unit
