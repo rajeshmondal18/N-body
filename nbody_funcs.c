@@ -18,8 +18,8 @@ extern float  vhh, // Hubble parameter
 
 extern long N1,N2,N3;// box dimension (grid) 
 extern int NF, // Fill every NF grid point 
-  Nbin; // Number of bins to calculate final P(k) (output)
-
+  Nbin, // Number of bins to calculate final P(k) (output)
+  Nthreads; // no. of threads for the parallel computation
 extern long    MM; // Number of particles 
 extern float   LL; // grid spacing in Mpc
 
@@ -56,13 +56,13 @@ void Setting_Up_Memory_For_Ro(float av)
   // for multiple  threads
   fftwf_init_threads();
   
-  fftwf_plan_with_nthreads(omp_get_max_threads());
-  // fftwf_plan_with_nthreads(1);
+  //fftwf_plan_with_nthreads(omp_get_max_threads());
+   fftwf_plan_with_nthreads(Nthreads);
   
-  omp_set_num_threads(omp_get_max_threads());
-  //  omp_set_num_threads(1);
+  //omp_set_num_threads(omp_get_max_threads());
+   omp_set_num_threads(Nthreads);
   
-  printf("No of threads = %d\n",omp_get_max_threads());
+  printf("No of threads = %d\n",Nthreads);
   // done multi thread 
   
   ro = allocate_fftwf_3d(N1,N2,N3+2);
@@ -653,7 +653,7 @@ void grad_phi(int ix)
   vc=(fftwf_complex*)&(va[0][0][0]);
   roc=(fftwf_complex*)&(ro[0][0][0]);
   
-#pragma omp parallel for private(jj,kk,a0,a1,a2,AA,index)
+#pragma omp parallel for num_threads(Nthreads)  private(jj,kk,a0,a1,a2,AA,index)
   for(ii=0;ii<N1;ii++)
     {   
       a0 = (ii>N1/2)? Cx*(ii-N1) : Cx*ii; // kx
@@ -712,7 +712,7 @@ void Zel_move_gradphi(float av,float **rra,float **vva)
     {
       grad_phi(ii); // Calculate ix component of -Grad[Laplacian^{_1}[delta]]  in real space
       
-#pragma omp parallel for private(jj,kk,ll,pos,pin,N)
+#pragma omp parallel for num_threads(Nthreads) private(jj,kk,ll,pos,pin,N)
       for(jj=0;jj<N1/NF;jj++)
 	for(kk=0;kk<N2/NF;kk++)
 	  for(ll=0;ll<N3/NF;ll++)
@@ -749,7 +749,7 @@ void cic(float **rra)
   float wx,wy,wz;
 
   /* Clear out the array ro. ******/
-#pragma omp parallel for private(i,j,k,index)
+#pragma omp parallel for num_threads(Nthreads) private(i,j,k,index)
   for(i=0;i<N1;i++)
     for(j=0;j<N2;j++)
       for(k=0;k<N3;k++)
@@ -761,7 +761,7 @@ void cic(float **rra)
 
    
   /********************************/
-#pragma omp parallel for private(i, j, k, ii, jj, kk, wx, ix, wy, jy, wz, kz, index)
+#pragma omp parallel for num_threads(Nthreads) private(i, j, k, ii, jj, kk, wx, ix, wy, jy, wz, kz, index)
   for(pin=0;pin<MM;pin++)
     { /* begin particle index loop */
       /* (a/b/c)[0] or (a/b/c)[1] can never be greater than (N1/N2/N3) */
@@ -812,7 +812,7 @@ void cic_sampled(float **rra, int *s_indx)
   float wx,wy,wz;
 
   /* Clear out the array ro. ******/
-#pragma omp parallel for private(i,j,k,index)
+#pragma omp parallel for num_threads(Nthreads) private(i,j,k,index)
   for(i=0;i<N1;i++)
     for(j=0;j<N2;j++)
       for(k=0;k<N3;k++)
@@ -823,7 +823,7 @@ void cic_sampled(float **rra, int *s_indx)
 	}
 
   /********************************/
-#pragma omp parallel for private(i, j, k, ii, jj, kk, wx, ix, wy, jy, wz, kz, index)
+#pragma omp parallel for num_threads(Nthreads) private(i, j, k, ii, jj, kk, wx, ix, wy, jy, wz, kz, index)
   for(pin=0;pin<MM;pin++)
    if(s_indx[pin]==-1)
     { /* begin particle index loop */
@@ -887,7 +887,7 @@ void Get_phi(int f_flag)  // calculates Laplacian^{-1}[ ro]]
   
   roc=(fftwf_complex*)&(ro[0][0][0]);
   
-#pragma omp parallel for private(jj,kk,a0,a1,a2,AA,index)
+#pragma omp parallel for num_threads(Nthreads) private(jj,kk,a0,a1,a2,AA,index)
   for(ii=0;ii<N1;ii++)
     {   
       a0=ii*pi/N1; // kx *LL/2
@@ -955,7 +955,7 @@ void Update_v(float av,float delta_aa,float **rra,float **vva)  // udates v if (
   
   coeff/=(2.*LL); // divide by 2 LL for Grad on grid 
   
-#pragma omp parallel for private(a,b,c,xx,yy,zz,g0,g1,g2,ii,jj,kk,ix,wx,xp,xn,jy,wy,yn,yp,kz,wz,zp,zn)	   
+#pragma omp parallel for num_threads(Nthreads) private(a,b,c,xx,yy,zz,g0,g1,g2,ii,jj,kk,ix,wx,xp,xn,jy,wy,yn,yp,kz,wz,zp,zn)	   
   for(pin=0;pin<MM;pin++)
     { 
       /* left most corner of the cube enclosing the particle */
@@ -1026,7 +1026,7 @@ void Update_x(float aa,float delta_aa,float **rra,float **vva)
   
   coeff=delta_aa/(aa*aa*aa*Hf(aa)); // delta_aa scaled 
   
-#pragma omp parallel for private(ii,N)
+#pragma omp parallel for num_threads(Nthreads) private(ii,N)
   for(pin=0;pin<MM;pin++)  /* begin particle index loop */
     {
       for (ii=0;ii<3;++ii)   /* begin co-ordinate x/y/z loop */
