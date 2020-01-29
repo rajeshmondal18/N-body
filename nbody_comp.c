@@ -19,8 +19,8 @@ float  vhh, // Hubble parameter in units of 100 km/s/Mpc
 
 long N1,N2,N3;// box dimension (grid) 
 int NF, // Fill every NF grid point 
-  Nbin; // Number of bins to calculate final P(k) (output)
-
+  Nbin, // Number of bins to calculate final P(k) (output)
+  Nthreads; // no. of threads for the parallel computation
 float   LL; // grid spacing in Mpc
 
 long    MM; // Number of particles
@@ -67,7 +67,7 @@ void main()
   /* Read input parameters for the simulation from the file "input.nbody_comp" */
   /*---------------------------------------------------------------------------*/
   inp=fopen("input.nbody_comp","r");
-  fscanf(inp,"%ld%d",&seed,&Nbin);
+  fscanf(inp,"%ld%d%d",&seed,&Nbin,&Nthreads);
   fscanf(inp,"%f%f%f%f",&vhh,&vomegam,&vomegalam,&vnn);
   fscanf(inp,"%f%f",&vomegab,&sigma_8_present);
   fscanf(inp,"%ld%ld%ld%d%f",&N1,&N2,&N3,&NF,&LL);

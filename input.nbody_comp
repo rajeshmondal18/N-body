@@ -1,4 +1,4 @@
--100012  10
+-100012  10 2
 0.6704  0.3183  0.6817  0.9619 
 0.04902  0.8347
 256  256  256  2  0.07
@@ -12,7 +12,7 @@
 
 #------ above are the parameter values (user may change this) --------
 #----------------------------------------------------
-seed  Nbin
+seed  Nbin Nthreads
 hh    omega_m	omega_l		spectral_index
 omega_baryon	sigma_8	
 N1 N2 N3 fraction_fill LL
