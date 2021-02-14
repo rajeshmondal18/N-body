@@ -620,7 +620,7 @@ void calpow_k(int f_flag, float kmin, float kmax, int Nbin,double* power, double
 	  for(j=0;j<N2;j++)
 	    {
 	      index2=index1 + j*(N3/2+1) ;
-	      for(k=0;k<=N3/2;k++)
+	      for(k=0;k<N3/2;k++)
 		{
 		  index=index2 + k;
 		  
@@ -730,7 +730,7 @@ void Zel_move_gradphi(float av,float **rra,float **vva)
 	      
 	      /* to ensure the values are not negative */
 	      rra[pin][ii]=rra[pin][ii]+N;
-	      rra[pin][ii]= rra[pin][ii]-1.0*N*(long)(floor(rra[pin][ii])/(1.*N));
+	      rra[pin][ii]= rra[pin][ii]-1.0*N*floor(rra[pin][ii])/(1.*N);
 	    }
       /*------------------- done ---------------------*/
     }
@@ -1040,7 +1040,7 @@ void Update_x(float aa,float delta_aa,float **rra,float **vva)
 	  /* to ensure the values are not negative */
 	  rra[pin][ii] = rra[pin][ii]+N;
 	  /*----------------------------------------*/
-	  rra[pin][ii] = rra[pin][ii]-1.0*N*(long)(floor(rra[pin][ii])/(1.*N));
+	  rra[pin][ii] = rra[pin][ii]-1.0*N*floor(rra[pin][ii])/(1.*N);
 	  
 	} /* end of x-y-z co-od loop */
     } /* end of particle loop */
