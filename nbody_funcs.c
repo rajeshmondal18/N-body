@@ -730,7 +730,7 @@ void Zel_move_gradphi(float av,float **rra,float **vva)
 	      
 	      /* to ensure the values are not negative */
 	      rra[pin][ii]=rra[pin][ii]+N;
-	      rra[pin][ii]= rra[pin][ii]-1.0*N*floor(rra[pin][ii])/(1.*N);
+	      rra[pin][ii]= rra[pin][ii]-1.0*N*(int)(floor(rra[pin][ii])/(1.*N));
 	    }
       /*------------------- done ---------------------*/
     }
@@ -1039,9 +1039,8 @@ void Update_x(float aa,float delta_aa,float **rra,float **vva)
 	  
 	  /* to ensure the values are not negative */
 	  rra[pin][ii] = rra[pin][ii]+N;
-	  /*----------------------------------------*/
-	  rra[pin][ii] = rra[pin][ii]-1.0*N*floor(rra[pin][ii])/(1.*N);
-	  
+	  rra[pin][ii] = rra[pin][ii]-1.0*N*(int)(floor(rra[pin][ii])/(1.*N));
+
 	} /* end of x-y-z co-od loop */
     } /* end of particle loop */
 } /* end function */
